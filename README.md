@@ -1,16 +1,9 @@
-# mensajeria
+# Mensajeria
 
-A new Flutter project.
+Tarea Tecnologia 3
 
-## Getting Started
+## Dependencias a Instalar
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1- flutter pub add provider
+2- dart pub add dio
+3- flutter pub add image_picker

@@ -5,77 +5,130 @@ import 'package:mensajeria/presentacion/provider/chat_provider.dart';
 import 'package:mensajeria/presentacion/widgets/my_message_buble.dart';
 import 'package:mensajeria/presentacion/widgets/otros_message_buble.dart';
 import 'package:mensajeria/presentacion/widgets/shared/message_field_box.dart';
+import 'dart:io';
 
-class ChatScreen extends StatelessWidget{
-  const ChatScreen ({super.key});
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key});
+
   @override
-  Widget build (BuildContext context){
-    return  Scaffold(
-    appBar: AppBar(
-    leading: const Padding(
+  Widget build(BuildContext context) {
+    // Acceder al provider
+    final chatProvider = context.watch<ChatProvider>();
 
-    padding: EdgeInsets.all(5.0),
-  
-    child: CircleAvatar(
-   
-    backgroundImage: NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYrXJbwhwO94iECP0qUzvI3aTU55n4PLRSqQ&s'),
-    )
-    ),
-    title: const Text ("Contacto 1 ♥"),
-    centerTitle: false,
-    ),
-   
-   
-    body: _Chatview(),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: CircleAvatar(
+            backgroundImage: _buildImageProvider(chatProvider.contactIconUrl),
+          ),
+        ),
+        title: Text(chatProvider.contactName), // Nombre dinámico del contacto
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              // Llamar a una función que abra un diálogo para cambiar el nombre y el ícono
+              _showEditContactDialog(context, chatProvider);
+            },
+          )
+        ],
+      ),
+      body: _ChatView(),
+    );
+  }
 
+  // Construye el ImageProvider con la URL o una imagen por defecto
+  ImageProvider _buildImageProvider(String url) {
+    if (url.isEmpty || (Uri.tryParse(url)?.isAbsolute != true)) {
+      return const AssetImage('assets/default_avatar.png'); // Imagen por defecto
+    }
+    else if (url.startsWith('http') || url.startsWith('https')) {
+      return NetworkImage(url);
+    } else {
+      return FileImage(File(url));
+    }
+  }
+
+  // Mostrar diálogo para cambiar el nombre e ícono
+  void _showEditContactDialog(BuildContext context, ChatProvider chatProvider) {
+    final TextEditingController nameController = TextEditingController();
+    final TextEditingController iconController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Editar Contacto"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: "Nuevo Nombre"),
+              ),
+              TextField(
+                controller: iconController,
+                decoration: const InputDecoration(labelText: "URL del Nuevo Ícono"),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                // Llamar a updateContact con los nuevos valores
+                chatProvider.updateContact(
+                  nameController.text.isEmpty ? chatProvider.contactName : nameController.text,
+                  iconController.text.isEmpty ? chatProvider.contactIconUrl : iconController.text,
+                );
+
+                // Limpiar los controladores
+                nameController.clear();
+                iconController.clear();
+
+                Navigator.pop(context); // Cerrar el diálogo
+              },
+              child: const Text("Guardar"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-class _Chatview extends StatelessWidget {
-  
+class _ChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-   //referencia al provider
-  // PENDINTES A LOS CAMBIOS QUE OCURREN EN LA CLASE 
-   
-   final chatProvider = context.watch<ChatProvider>();
-  
-
-
+    final chatProvider = context.watch<ChatProvider>();
 
     return SafeArea(
       child: Padding(
-        
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
-        children: [
-         Expanded(
-          // dentro del listview se encuentra el scroll
-          child: ListView.builder(
-          // enlazar con el scrollcontroller
-          controller: chatProvider.chatScrollController,
-          // saber cuantos mensajes hay
-          itemCount: chatProvider.messageList.length,
-          itemBuilder: (context, index){
-          
-          final message = chatProvider.messageList[index];
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: chatProvider.chatScrollController,
+                itemCount: chatProvider.messageList.length,
+                itemBuilder: (context, index) {
+                  final message = chatProvider.messageList[index];
 
-          //identificar de quien es el mensaje para mandar la condicion de abrir la clase
-          return (message.yooEl == YooEl.hers)
-          ? OtrosMessaheBuble(message: message)
-          //llamar al nuevo mensaje
-          : MyMessageBuble( message : message);
-
-          })
-         ),
-        // ya no puede ser constante por que me pide proporcionar el onvalue
-          MessageFieldBox(
-            //llamar al sendMessage que se encuentra en el provider
-            onValue: (value) => chatProvider.sendMessage(value),
-
-          ),
-        ],
+                  return (message.yooEl == YooEl.hers)
+                      ? OtrosMessaheBuble(message: message)
+                      : MyMessageBuble(message: message);
+                },
+              ),
+            ),
+            MessageFieldBox(
+              onValue: (value) => chatProvider.sendMessage(value),
+            ),
+          ],
         ),
       ),
     );

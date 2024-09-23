@@ -1,10 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:mensajeria/config/helpers/get_answer.dart';
 import 'package:mensajeria/dominio/mesagge.dart';
+import 'package:image_picker/image_picker.dart'; // Importar el paquete
 
 // Clase para que el provider notifique cuando recibimos cambios
 class ChatProvider extends ChangeNotifier{
+  String contactName = "Contacto 1 ♥";
+  String contactIconUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYrXJbwhwO94iECP0qUzvI3aTU55n4PLRSqQ&s';
+  // Controlador del ImagePicker
+  final ImagePicker _picker = ImagePicker();
+  
+  // Método para seleccionar una imagen desde la galería
+  Future<void> pickImageFromGallery() async {
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      // Convertir a URL o usar archivo local
+      contactIconUrl = pickedFile.path; // Esto es una ruta local
+      notifyListeners(); // Notificar a los widgets que escuchen el provider
+    }
+  }
+
+  void updateContact(String newName, String newIconUrl) {
+    contactName = newName;
+    contactIconUrl = newIconUrl;
+    notifyListeners();
+  }
+   
   // Instancia de la clase GetAnswer
   final GetAnswer getAnswer = GetAnswer();
   

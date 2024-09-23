@@ -40,25 +40,30 @@ class OtrosMessaheBuble extends StatelessWidget{
   }
 
 
-class _ImageBubble extends StatelessWidget{
-  
-   // mandar la imagen url
-   final String imageUrl;
+class _ImageBubble extends StatelessWidget {
+  // Recibir la URL de la imagen
+  final String imageUrl;
 
   const _ImageBubble({ 
     required this.imageUrl
-    });
+  });
 
   @override
   Widget build(BuildContext context) {
-    
     final size = MediaQuery.of(context).size;
 
-   
     return ClipRRect(
-      
-      
+      borderRadius: BorderRadius.circular(15), // Opcional, para esquinas redondeadas
+      child: Image.network(
+        imageUrl,
+        width: size.width * 0.7, // Ajusta el ancho a un 70% del ancho de la pantalla
+        height: 200, // Fija una altura para las imágenes
+        fit: BoxFit.cover, // Ajusta la imagen para que cubra todo el espacio disponible
+        errorBuilder: (context, error, stackTrace) {
+          // En caso de que haya un error al cargar la imagen
+          return const Text('Error al cargar la imagen');
+        },
+      ),
     );
-    
-   }
   }
+}
