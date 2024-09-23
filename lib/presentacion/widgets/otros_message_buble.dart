@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mensajeria/dominio/mesagge.dart';
+import 'package:mensajeria/config/apptheme.dart';
 
 class OtrosMessaheBuble extends StatelessWidget{
   const OtrosMessaheBuble ({
@@ -12,14 +13,14 @@ class OtrosMessaheBuble extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
-  final colors = Theme.of (context).colorScheme;
+    final appTheme = Apptheme(selectedColor: 2); // Asegúrate de usar el color correcto
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
      Container(
       decoration:  BoxDecoration(
-      color: colors.secondary,
+      color: appTheme.selectedThemeColor, // Usa el color seleccionado,
       borderRadius: BorderRadius.circular(20)
 
       ),
