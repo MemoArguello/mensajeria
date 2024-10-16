@@ -31,7 +31,7 @@ class GetYesNoModel {
     // Método para convertir el modelo a un mensaje en español
     Message toMessageEntity(YooEl yooEl) {
         return Message(
-          text: answer == 'yes' ? 'Sí' : 'No',  // Traducción simple del "yes" o "no"
+          text: answer == 'yes' ? 'Sí' : 'No',  // Traducción del "yes" o "no"
           imageUrl: image,
           yooEl: yooEl,  // Se pasa el valor de YooEl
         );
