@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false, // Oculta el banner de "debug" en la esquina superior derecha.
         theme: Apptheme(selectedColor: 1).theme(), 
         // Aplica el tema personalizado definido en Apptheme, con un color seleccionado.
-        home: const ChatScreen(), 
+        home: ChatScreen(), 
         // Define la pantalla principal de la aplicación, en este caso ChatScreen.
       ),
     ); 

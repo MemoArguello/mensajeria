@@ -34,6 +34,8 @@ class GetYesNoModel {
           text: answer == 'yes' ? 'Sí' : 'No',  // Traducción del "yes" o "no"
           imageUrl: image,
           yooEl: yooEl,  // Se pasa el valor de YooEl
+          timestamp: DateTime.now(),
+          isRead: true,
         );
     }
 }

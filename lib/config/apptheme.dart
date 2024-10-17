@@ -36,7 +36,7 @@ class Apptheme {
     return ThemeData(
       useMaterial3: true, 
       // Activa el uso del nuevo diseño de Material 3, una actualización de diseño de Google.
-      brightness: Brightness.dark,  
+      brightness: Brightness.light,  
       // Fuerza el tema oscuro en toda la app.
 
       colorSchemeSeed: _colorThemes[selectedColor], 

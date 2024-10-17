@@ -4,15 +4,18 @@ import 'package:mensajeria/dominio/mesagge.dart';
 import 'package:image_picker/image_picker.dart'; // Importar el paquete
 
 // Clase para que el provider notifique cuando recibimos cambios
-class ChatProvider extends ChangeNotifier{
-  String contactName = "Contacto 1 ♥";
-  String contactIconUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYrXJbwhwO94iECP0qUzvI3aTU55n4PLRSqQ&s';
+class ChatProvider extends ChangeNotifier {
+  String contactName = "ChatGPT";
+  String contactIconUrl =
+      'https://static.vecteezy.com/system/resources/previews/021/608/790/non_2x/chatgpt-logo-chat-gpt-icon-on-black-background-free-vector.jpg';
+  
   // Controlador del ImagePicker
   final ImagePicker _picker = ImagePicker();
-  
+
   // Método para seleccionar una imagen desde la galería
   Future<void> pickImageFromGallery() async {
-    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       // Convertir a URL o usar archivo local
@@ -26,10 +29,10 @@ class ChatProvider extends ChangeNotifier{
     contactIconUrl = newIconUrl;
     notifyListeners();
   }
-   
+
   // Instancia de la clase GetAnswer
   final GetAnswer getAnswer = GetAnswer();
-  
+
   // Scroll controller
   final ScrollController chatScrollController = ScrollController();
 
@@ -41,17 +44,33 @@ class ChatProvider extends ChangeNotifier{
     // Validación para evitar mensajes vacíos
     if (text.isEmpty) return;
 
-    final newMessage = Message(text: text, yooEl: YooEl.me);
+    // Crear el mensaje del usuario
+    final newMessage = Message(
+      text: text, 
+      yooEl: YooEl.me, 
+      timestamp: DateTime.now(), 
+      isRead: true
+    );
     messageList.add(newMessage);
 
     // Llamar a herReply solamente si es una pregunta
     if (text.endsWith('?')) {
       await herReply();
+    } else {
+      // Si no es una pregunta, generar un mensaje automatizado personalizado
+      final autoResponse = Message(
+        text: "No me hiciste ninguna pregunta", 
+        yooEl: YooEl.hers,
+        timestamp: DateTime.now(),
+        isRead: true,
+      );
+      // Agregar el mensaje automatizado a la lista
+      messageList.add(autoResponse);
     }
 
     // Notificar cambios a los listeners
     notifyListeners();
-    
+
     // Mover el scroll al final
     moveScrollToBottom();
   }
@@ -59,12 +78,14 @@ class ChatProvider extends ChangeNotifier{
   // Método para generar la respuesta automática
   Future<void> herReply() async {
     final herMessage = await getAnswer.getAnswer();
-    
-    // Agregar el remitente 'hers' al mensaje
+
+    // Crear el mensaje de respuesta
     final herMessageWithSender = Message(
       text: herMessage.text,
       imageUrl: herMessage.imageUrl,
-      yooEl: YooEl.hers
+      yooEl: YooEl.hers,
+      timestamp: DateTime.now(),
+      isRead: true,
     );
 
     // Agregar el mensaje a la lista
@@ -84,9 +105,9 @@ class ChatProvider extends ChangeNotifier{
 
     // Animar el scroll hacia la parte inferior
     chatScrollController.animateTo(
-      chatScrollController.position.maxScrollExtent, 
-      duration: const Duration(milliseconds: 300), 
-      curve: Curves.easeOut
+      chatScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 }

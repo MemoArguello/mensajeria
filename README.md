@@ -7,3 +7,4 @@ Tarea Tecnologia 3
 1- flutter pub add provider
 2- dart pub add dio
 3- flutter pub add image_picker
+4- flutter pub add intl
