@@ -4,9 +4,9 @@ import 'package:mensajeria/dominio/mesagge.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChatProvider extends ChangeNotifier {
-  String contactName = "ChatGPT";
+  String contactName = "Contacto";
   String contactIconUrl =
-      'https://static.vecteezy.com/system/resources/previews/021/608/790/non_2x/chatgpt-logo-chat-gpt-icon-on-black-background-free-vector.jpg';
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Google_Contacts_logo.png';
   
   final ImagePicker _picker = ImagePicker();
 
@@ -41,15 +41,8 @@ class ChatProvider extends ChangeNotifier {
     );
     messageList.add(newMessage);
 
-    if (text.toLowerCase().startsWith("mi nombre es ")) {
-      String userName = text.substring("mi nombre es ".length);
-      final autoResponse = Message(
-        text: "Hola, $userName!",
-        yooEl: YooEl.hers,
-        timestamp: DateTime.now(),
-        isRead: true,
-      );
-      messageList.add(autoResponse);
+    if (text.toLowerCase().endsWith("?")) {
+        await herReply();
     } else if (text.toLowerCase() == 'mañana') {
       final autoResponse = Message(
         text: "Lo pensaré mañana.",
@@ -67,8 +60,13 @@ class ChatProvider extends ChangeNotifier {
       );
       messageList.add(autoResponse);
     } else {
-      // Si no es una palabra clave, proceder con respuesta normal
-      await herReply();
+      final autoResponse = Message(
+        text: "No me hiciste una pregunta.",
+        yooEl: YooEl.hers,
+        timestamp: DateTime.now(),
+        isRead: true,
+      );
+      messageList.add(autoResponse);
     }
 
     notifyListeners();
