@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:mensajeria/config/helpers/get_answer.dart';
 import 'package:mensajeria/dominio/mesagge.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,9 +27,7 @@ class ChatProvider extends ChangeNotifier {
   }
 
   final GetAnswer getAnswer = GetAnswer();
-
   final ScrollController chatScrollController = ScrollController();
-
   List<Message> messageList = [];
 
   Future<void> sendMessage(String text) async {
@@ -43,8 +41,16 @@ class ChatProvider extends ChangeNotifier {
     );
     messageList.add(newMessage);
 
-    // Respuesta automática basada en palabras clave
-    if (text.toLowerCase() == 'mañana') {
+    if (text.toLowerCase().startsWith("mi nombre es ")) {
+      String userName = text.substring("mi nombre es ".length);
+      final autoResponse = Message(
+        text: "Hola, $userName!",
+        yooEl: YooEl.hers,
+        timestamp: DateTime.now(),
+        isRead: true,
+      );
+      messageList.add(autoResponse);
+    } else if (text.toLowerCase() == 'mañana') {
       final autoResponse = Message(
         text: "Lo pensaré mañana.",
         yooEl: YooEl.hers,
