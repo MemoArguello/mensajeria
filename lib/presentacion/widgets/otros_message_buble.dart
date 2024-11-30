@@ -55,33 +55,19 @@ class _ImageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return ClipRRect(
-      borderRadius:
-          BorderRadius.circular(15), // Opcional, para esquinas redondeadas
-      child: Image.network(
-        imageUrl,
-        width: size.width * 0.7, // Ajusta el ancho a un 70% del ancho de la pantalla
-        height: 200, // Fija una altura para las imágenes
-        fit: BoxFit.cover, // Ajusta la imagen para que cubra todo el espacio disponible
-                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-          if (loadingProgress == null) {
-            return child; // Retorna la imagen cuando ya ha terminado de cargar
-          } else {
-            // Muestra el CircularProgressIndicator mientras se carga la imagen
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                    : null,
-              ),
-            );
-          }
-        },
-        errorBuilder: (context, error, stackTrace) {
-          // En caso de que haya un error al cargar la imagen
-          return const Text('Error al cargar la imagen');
-        },
-      ),
-    );
+return ClipRRect(
+  borderRadius: BorderRadius.circular(15), // Opcional, para esquinas redondeadas
+  child: Image.network(
+    imageUrl,
+    width: size.width * 0.7, // Ajusta el ancho a un 70% del ancho de la pantalla
+    height: 200, // Fija una altura para las imágenes
+    fit: BoxFit.cover, // Ajusta la imagen para que cubra todo el espacio disponible
+    errorBuilder: (context, error, stackTrace) {
+      // En caso de que haya un error al cargar la imagen
+      return const Text('Error al cargar la imagen');
+    },
+  ),
+);
+
   }
 }

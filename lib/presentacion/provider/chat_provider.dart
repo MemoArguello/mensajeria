@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:mensajeria/config/helpers/get_answer.dart';
 import 'package:mensajeria/dominio/mesagge.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,7 +7,7 @@ class ChatProvider extends ChangeNotifier {
   String contactName = "ChatGPT";
   String contactIconUrl =
       'https://static.vecteezy.com/system/resources/previews/021/608/790/non_2x/chatgpt-logo-chat-gpt-icon-on-black-background-free-vector.jpg';
-  
+
   final ImagePicker _picker = ImagePicker();
 
   Future<void> pickImageFromGallery() async {
@@ -34,11 +34,7 @@ class ChatProvider extends ChangeNotifier {
     if (text.isEmpty) return;
 
     final newMessage = Message(
-      text: text, 
-      yooEl: YooEl.me, 
-      timestamp: DateTime.now(), 
-      isRead: true
-    );
+        text: text, yooEl: YooEl.me, timestamp: DateTime.now(), isRead: true);
     messageList.add(newMessage);
 
     if (text.toLowerCase().startsWith("mi nombre es ")) {
@@ -67,8 +63,17 @@ class ChatProvider extends ChangeNotifier {
       );
       messageList.add(autoResponse);
     } else {
-      // Si no es una palabra clave, proceder con respuesta normal
-      await herReply();
+      if (text.toLowerCase().endsWith("?")) {
+        await herReply();
+      } else {
+        final autoResponse = Message(
+          text: "No me hiciste una Pregunta",
+          yooEl: YooEl.hers,
+          timestamp: DateTime.now(),
+          isRead: true,
+        );
+        messageList.add(autoResponse);
+      }
     }
 
     notifyListeners();
