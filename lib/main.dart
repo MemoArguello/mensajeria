@@ -1,38 +1,76 @@
-import 'package:flutter/material.dart'; // Importa la biblioteca principal de Flutter para crear interfaces de usuario.
-import 'package:provider/provider.dart'; // Importa la biblioteca Provider para la gestión del estado.
-import 'package:mensajeria/config/apptheme.dart'; // Importa el archivo que contiene la configuración del tema de la aplicación.
-import 'package:mensajeria/presentacion/chat/chat_screen.dart'; // Importa la pantalla del chat que se mostrará como página principal.
-import 'package:mensajeria/presentacion/provider/chat_provider.dart'; // Importa el proveedor que gestiona el estado del chat.
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:mensajeria/config/apptheme.dart';
+import 'package:mensajeria/presentacion/chat/chat_screen.dart';
+import 'package:mensajeria/screen/Counter_functions_screen.dart';
+import 'package:mensajeria/presentacion/provider/chat_provider.dart';
 
 void main() {
-  // La función main es el punto de entrada de la aplicación.
-  runApp(const MyApp()); // Ejecuta la aplicación, que usa la clase MyApp como widget principal.
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // MyApp es el widget principal de la aplicación, que extiende StatelessWidget porque no tiene estado propio.
-  const MyApp({super.key}); // Constructor de la clase MyApp. 'super.key' permite pasar el identificador del widget a la clase padre.
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // El método build se encarga de construir la interfaz de usuario del widget.
-    
     return MultiProvider(
-      // MultiProvider permite gestionar varios providers, aunque en este caso solo tenemos uno.
       providers: [
-        // Aquí se define un provider que usará la clase ChatProvider para manejar el estado del chat.
-        ChangeNotifierProvider (create: (_) => ChatProvider())
-        // ChangeNotifierProvider crea una instancia de ChatProvider. El guion bajo (_) indica que no se utiliza el contexto en la creación.
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: MaterialApp(
-        // MaterialApp es el widget base que configura la app con soporte de Material Design.
-        title: 'Si o no APP', // Título de la aplicación.
-        debugShowCheckedModeBanner: false, // Oculta el banner de "debug" en la esquina superior derecha.
-        theme: Apptheme(selectedColor: 1).theme(), 
-        // Aplica el tema personalizado definido en Apptheme, con un color seleccionado.
-        home: ChatScreen(), 
-        // Define la pantalla principal de la aplicación, en este caso ChatScreen.
+        title: 'Si o no APP',
+        debugShowCheckedModeBanner: false,
+        theme: Apptheme(selectedColor: 1).theme(),
+        home: const HomeSelector(),  // Cambiamos la pantalla inicial a HomeSelector.
       ),
-    ); 
+    );
+  }
+}
+
+class HomeSelector extends StatelessWidget {
+  const HomeSelector({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Selecciona una opción'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Selecciona a qué pantalla deseas ir:',
+              style: TextStyle(fontSize: 24),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () {
+                // Navegar a ChatScreen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ChatScreen()),
+                );
+              },
+              child: const Text('Chat'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Navegar a CounterScreen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const CounterScreen()),
+                );
+              },
+              child: const Text('Contador'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
